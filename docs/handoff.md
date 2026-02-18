@@ -73,3 +73,9 @@
 ## Legal and rights note
 - Current status is `법무/권리 확정 후 확정`
 - Photo "free reuse" must not be enabled unless license scope is contractually confirmed.
+
+## 7) Growth and trust features added
+- Analytics hooks: PostHog events (`tab`, `detail`, `paywall`, `community`, `subscription`) via `/Users/shchoi/Documents/Seoul-Office-Insider/config.js`
+- Error monitoring hooks: Sentry capture for runtime errors and unhandled rejections
+- Compare UX: table + district-average delta bars
+- Community trust: new-user posting guardrail, report-count auto-hide, role badge verification request flow

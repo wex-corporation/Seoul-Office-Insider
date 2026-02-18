@@ -424,6 +424,50 @@ textarea:focus {
   white-space: nowrap;
 }
 
+.compare-delta-card {
+  margin-top: var(--space-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  background: #fbfcff;
+  display: grid;
+  gap: 8px;
+}
+
+.delta-row {
+  display: grid;
+  grid-template-columns: minmax(84px, 1fr) 2fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.delta-name {
+  color: var(--ink-700);
+  font-weight: 600;
+}
+
+.delta-track {
+  width: 100%;
+  height: 8px;
+  background: #eef2f8;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.delta-bar {
+  height: 100%;
+  border-radius: var(--radius-pill);
+}
+
+.delta-bar.is-positive {
+  background: linear-gradient(90deg, #2f6fed, #5f8dff);
+}
+
+.delta-bar.is-negative {
+  background: linear-gradient(90deg, #8a95ab, #c2cad9);
+}
+
 .compare-lock {
   position: absolute;
   inset: 0;
@@ -465,6 +509,15 @@ textarea:focus {
   margin-bottom: var(--space-sm);
 }
 
+.community-form .ghost-btn,
+.community-form .primary-btn {
+  width: 100%;
+}
+
+.community-form .ghost-btn {
+  margin-bottom: var(--space-xs);
+}
+
 .meta-note {
   color: var(--ink-500);
   font-size: 12px;
@@ -483,6 +536,16 @@ textarea:focus {
   padding: var(--space-sm) var(--space-md);
   display: grid;
   gap: 8px;
+}
+
+.thread-item.is-reported {
+  border-color: #ffd9a2;
+  background: #fffdf8;
+}
+
+.thread-hidden-note {
+  background: #f7f9fd;
+  border-style: dashed;
 }
 
 .thread-head {
@@ -511,6 +574,24 @@ textarea:focus {
   background: rgba(47, 111, 237, 0.12);
   border-color: rgba(47, 111, 237, 0.24);
   color: #1c4cc5;
+}
+
+.badge.verified {
+  background: rgba(2, 167, 127, 0.12);
+  border-color: rgba(2, 167, 127, 0.26);
+  color: #02795e;
+}
+
+.badge.pending {
+  background: rgba(240, 138, 47, 0.14);
+  border-color: rgba(240, 138, 47, 0.28);
+  color: #b55a00;
+}
+
+.badge.muted {
+  background: #f4f6fa;
+  border-color: #e6ebf4;
+  color: #8b95a6;
 }
 
 .thread-actions {
@@ -755,6 +836,37 @@ textarea:focus {
 .detail-cta-row {
   display: grid;
   gap: var(--space-xs);
+}
+
+.lock-summary-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #f8fbff;
+  padding: var(--space-sm);
+  font-size: 13px;
+  color: var(--ink-700);
+}
+
+.paywall-lock-summary {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #f9fbff;
+  padding: var(--space-sm);
+  display: grid;
+  gap: 6px;
+  margin: var(--space-xs) 0 var(--space-sm);
+}
+
+.paywall-lock-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 13px;
+}
+
+.paywall-lock-item strong {
+  color: var(--ink-700);
 }
 
 .paywall-grid {

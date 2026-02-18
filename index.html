@@ -144,8 +144,10 @@
             </div>
             <label class="stacked-label" for="community-content">내용</label>
             <textarea id="community-content" maxlength="320" placeholder="예: 점심시간 엘리베이터 대기 6~8분"></textarea>
+            <button class="ghost-btn" type="button" id="community-request-verification">선택 역할 검증 요청</button>
             <button class="primary-btn" type="submit">건물 스레드에 남기기</button>
             <p id="community-submit-note" class="meta-note"></p>
+            <p id="community-verification-note" class="meta-note"></p>
           </form>
         </section>
 
@@ -241,6 +243,7 @@
     </header>
 
     <p id="paywall-context" class="sub-copy">통계와 비교가 필요한 순간, 정보가 열립니다.</p>
+    <div id="paywall-lock-summary" class="paywall-lock-summary"></div>
 
     <div class="paywall-grid">
       <article>
@@ -275,6 +278,7 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
+  <script src="/config.js"></script>
   <script src="/data.js"></script>
   <script src="/app.js"></script>
 </body>
