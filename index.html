@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!-- Build Version: 2026-02-18 21:45 -->
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description"
+    content="서울 프라임 오피스 빌딩을 지도에서 탐색하고, 3개 핵심 지표와 커뮤니티 인사이트를 확인하는 모바일 퍼스트 빌딩 인텔리전스.">
+  <meta name="theme-color" content="#0d0f14">
+  <title>Seoul Office Insider</title>
+
+  <meta property="og:title" content="Seoul Office Insider">
+  <meta property="og:description" content="Map first. Compare fast. Unlock office intelligence.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="top-header">
+      <div>
+        <p class="eyebrow">SEOUL OFFICE MAP</p>
+        <h1 class="brand">Seoul Office Insider</h1>
+      </div>
+      <button class="ghost-btn" id="header-plan-btn">Free</button>
+    </header>
+
+    <main class="main-content">
+      <section id="tab-map" class="tab-page is-active" aria-label="Map tab">
+        <section class="headline-block">
+          <p class="headline-copy">Rent, traded, and told as a story.</p>
+          <p class="sub-copy" id="map-results-meta">서울 Top 45 오피스 빌딩 로딩 중...</p>
+        </section>
+
+        <section class="map-controls">
+          <label class="search-wrap" for="map-search-input">
+            <span>검색</span>
+            <input id="map-search-input" type="search" placeholder="건물명, 주소, 권역(CBD/GBD/YBD)">
+          </label>
+          <div id="map-district-filters" class="chip-row" role="tablist" aria-label="District filters">
+            <button class="chip is-active" data-district="ALL">All</button>
+            <button class="chip" data-district="CBD">CBD</button>
+            <button class="chip" data-district="GBD">GBD</button>
+            <button class="chip" data-district="YBD">YBD</button>
+            <button class="chip" data-district="ETC">ETC</button>
+          </div>
+        </section>
+
+        <section class="map-surface">
+          <div id="map-canvas" aria-label="Seoul office map"></div>
+        </section>
+
+        <section class="map-cards-section">
+          <div class="section-row">
+            <h2>Near you</h2>
+            <button class="text-link" id="clear-filters-btn">필터 초기화</button>
+          </div>
+          <div id="map-cards" class="map-cards" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section id="tab-explore" class="tab-page" aria-label="Explore tab">
+        <section class="headline-block">
+          <p class="headline-copy">Unlock comparison.</p>
+          <p class="sub-copy">권역 컬렉션, 랭킹, 그리고 오늘의 빌딩.</p>
+        </section>
+
+        <section>
+          <h2 class="section-title">District Collections</h2>
+          <div id="explore-collections" class="collection-grid"></div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Ranking Insights</h2>
+          <div id="explore-ranking" class="insight-list"></div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Today’s Building</h2>
+          <article id="today-building-hero" class="today-hero"></article>
+        </section>
+
+        <section>
+          <div class="section-row">
+            <h2 class="section-title">Pro Compare</h2>
+            <button class="text-link" id="explore-open-paywall">비교 잠금 해제</button>
+          </div>
+          <p class="sub-copy">최대 5개 빌딩 비교 + 권역 평균 대비</p>
+          <div id="compare-panel" class="compare-panel">
+            <div id="compare-list" class="compare-list"></div>
+            <div id="compare-table-wrap" class="compare-table-wrap"></div>
+            <div id="compare-lock" class="compare-lock hidden">
+              <p>비교와 통계가 필요할 때 열리는 정보입니다.</p>
+              <button class="primary-btn" id="compare-unlock-btn">Unlock comparison</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="tab-community" class="tab-page" aria-label="Community tab">
+        <section class="headline-block">
+          <p class="headline-copy">건물별 현장 인사이트</p>
+          <p class="sub-copy">게시판이 아닌 Building Thread 기반 커뮤니티.</p>
+        </section>
+
+        <section class="community-controls">
+          <label class="stacked-label" for="community-building-select">Building Thread</label>
+          <select id="community-building-select"></select>
+          <p class="meta-note">경험 배지: 임차인 / 방문자 / 중개 / 시설</p>
+        </section>
+
+        <section class="community-form-wrap">
+          <h2 class="section-title">새 노트 작성</h2>
+          <form id="community-form" class="community-form">
+            <div class="split-row">
+              <label class="stacked-label" for="community-type">Type</label>
+              <select id="community-type" required>
+                <option value="note">Note</option>
+                <option value="qna">QnA</option>
+                <option value="photo">Photo</option>
+              </select>
+            </div>
+            <div class="split-row">
+              <label class="stacked-label" for="community-role">Role Badge</label>
+              <select id="community-role" required>
+                <option value="tenant">임차인</option>
+                <option value="visitor">방문자</option>
+                <option value="broker">중개</option>
+                <option value="facility">시설</option>
+              </select>
+            </div>
+            <label class="stacked-label" for="community-content">내용</label>
+            <textarea id="community-content" maxlength="320" placeholder="예: 점심시간 엘리베이터 대기 6~8분"></textarea>
+            <button class="primary-btn" type="submit">건물 스레드에 남기기</button>
+            <p id="community-submit-note" class="meta-note"></p>
+          </form>
+        </section>
+
+        <section>
+          <div class="section-row">
+            <h2 class="section-title">Thread</h2>
+            <span class="meta-note">WRC 수치 데이터는 별도 뱃지 표시</span>
+          </div>
+          <div id="community-thread" class="community-thread"></div>
+        </section>
+      </section>
+
+      <section id="tab-profile" class="tab-page" aria-label="Profile tab">
+        <section class="headline-block">
+          <p class="headline-copy">Plan and Rights</p>
+          <p class="sub-copy">법무/권리 확정 전에는 이미지 활용 범위를 제한합니다.</p>
+        </section>
+
+        <section class="plan-card">
+          <p class="eyebrow">SUBSCRIPTION</p>
+          <h2 id="profile-plan-status">Free Plan</h2>
+          <p id="profile-plan-copy">지도 + 3개 지표 + 커뮤니티 기본 기능</p>
+          <button id="profile-plan-cta" class="primary-btn">Pro 시작</button>
+        </section>
+
+        <section>
+          <div class="section-row">
+            <h2 class="section-title">Favorites</h2>
+            <span class="meta-note">최대 10개 (Free)</span>
+          </div>
+          <div id="favorites-list" class="favorites-list"></div>
+        </section>
+
+        <section class="rights-card">
+          <p class="eyebrow">RIGHTS CHECK</p>
+          <h2 id="profile-rights-status">법무/권리 확정 후 확정</h2>
+          <ul>
+            <li>WRC/위펀딩 사진 사용 및 재배포 라이선스 계약 필요</li>
+            <li>또는 서비스 내 열람 전용 + B2B 재사용 라이선스 분리</li>
+            <li>또는 자체 촬영/구매 이미지 대체</li>
+          </ul>
+          <p class="meta-note">라이선스가 붙지 않으면 결제 버튼이 도망갑니다.</p>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-tabs" aria-label="Bottom tabs">
+      <button class="tab-btn is-active" data-tab-target="map">Map</button>
+      <button class="tab-btn" data-tab-target="explore">Explore</button>
+      <button class="tab-btn" data-tab-target="community">Community</button>
+      <button class="tab-btn" data-tab-target="profile">Profile</button>
+    </nav>
+  </div>
+
+  <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+
+  <aside id="detail-sheet" class="detail-sheet hidden" aria-label="Building detail">
+    <header class="detail-header">
+      <button class="icon-btn" id="detail-close" aria-label="Close">×</button>
+      <button class="ghost-btn" id="detail-favorite-btn">☆</button>
+    </header>
+
+    <section class="detail-hero">
+      <p class="eyebrow" id="detail-district"></p>
+      <h2 id="detail-name">Building</h2>
+      <p id="detail-subline" class="sub-copy"></p>
+      <div id="detail-visual" class="detail-visual">IMAGE PREVIEW</div>
+    </section>
+
+    <section>
+      <h3 class="section-title">Quick Facts</h3>
+      <div id="detail-facts" class="facts-grid"></div>
+    </section>
+
+    <section class="detail-tabs-wrap">
+      <div class="detail-tabs" role="tablist">
+        <button class="detail-tab is-active" data-detail-tab="overview">Overview</button>
+        <button class="detail-tab" data-detail-tab="architecture">Architecture</button>
+        <button class="detail-tab" data-detail-tab="value">Value</button>
+        <button class="detail-tab" data-detail-tab="rent">Rent</button>
+        <button class="detail-tab" data-detail-tab="community">Community</button>
+      </div>
+      <article id="detail-tab-content" class="detail-content"></article>
+    </section>
+
+    <section id="detail-cta-row" class="detail-cta-row"></section>
+  </aside>
+
+  <section id="paywall-modal" class="paywall-modal hidden" aria-label="Paywall">
+    <header class="detail-header">
+      <h2>Seoul Office Insider Pro</h2>
+      <button class="icon-btn" id="paywall-close" aria-label="Close">×</button>
+    </header>
+
+    <p id="paywall-context" class="sub-copy">통계와 비교가 필요한 순간, 정보가 열립니다.</p>
+
+    <div class="paywall-grid">
+      <article>
+        <p class="eyebrow">PRO COMPARE</p>
+        <p>빌딩 최대 5개 비교 + 권역 평균 대비</p>
+      </article>
+      <article>
+        <p class="eyebrow">MARKET STATS</p>
+        <p>권역별 임대/거래 요약 지표</p>
+      </article>
+      <article>
+        <p class="eyebrow">FULL DETAIL</p>
+        <p>거래/임대/소유/주요 임차 정보 전체 열람</p>
+      </article>
+      <article>
+        <p class="eyebrow">MEDIA ACCESS</p>
+        <p>권리 범위 내 고해상도 이미지 접근</p>
+      </article>
+    </div>
+
+    <div class="paywall-actions">
+      <button id="paywall-subscribe" class="primary-btn">월 구독 시작</button>
+      <button id="paywall-restore" class="ghost-btn">구독 복원</button>
+    </div>
+
+    <p class="meta-note">사진 자유사용은 권리 계약 확정 이후에만 활성화됩니다.</p>
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
