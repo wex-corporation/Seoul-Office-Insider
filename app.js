@@ -1,3 +1,4 @@
+(function () {
 const {
   BUILDINGS,
   DISTRICT_META,
@@ -1221,3 +1222,5 @@ function escapeHtml(raw) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 }
+
+})();

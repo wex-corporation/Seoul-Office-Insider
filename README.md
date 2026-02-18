@@ -19,6 +19,20 @@ python3 -m http.server 4173
 
 Then visit `http://localhost:4173`.
 
+## Deploy (Vercel)
+This repo is configured as a static SPA for Vercel.
+
+1. Import `/Users/shchoi/Documents/Seoul-Office-Insider` into Vercel.
+2. Framework preset: `Other`.
+3. Build command: none.
+4. Output directory: root (`.`).
+5. Deploy.
+
+Included config:
+- `/Users/shchoi/Documents/Seoul-Office-Insider/vercel.json`
+- SPA rewrite for non-file paths to `/index.html`
+- cache revalidation headers for `index.html`, `js`, `css`
+
 ## Data model
 See `/Users/shchoi/Documents/Seoul-Office-Insider/data.js` for:
 - Building schema + paid fields
